@@ -13,12 +13,12 @@
 
 const int NUMBER_OF_THREADS = 5;  // number of possible connections
 const int PORT = 7799;
-//const char * IP = "127.0.0.1";
-const char* IP = "10.0.1.1";
+//const char *IP = "127.0.0.1";
+const char *IP = "10.0.1.1";
 
 //pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
-void * clientThread(void *arg) {
+void *clientThread(void *arg) {
 
     char message[1000];
     char buffer[1024];
@@ -42,13 +42,13 @@ void * clientThread(void *arg) {
     strcpy (message, "hello from client \n");
 
     if( send(clientSocket , message , strlen(message) , 0) < 0) {
-            printf("Error: send failed! \n");
+            printf("Client: error: send failed! \n");
     }
 
     if(recv(clientSocket, buffer, 1024, 0) ) {
-        printf("Data received: %s\n", buffer);
+        printf("Client: data received: %s\n", buffer);
     } else {
-        printf("Error: receive failed! \n");
+        printf("Client: error: receive failed! \n");
     }
 
     //pthread_mutex_unlock(&lock);
@@ -64,7 +64,7 @@ int main(){
 
     for (int i=0; i<NUMBER_OF_THREADS; i++){
         if( pthread_create(&tid[i], NULL, clientThread, NULL) != 0 )
-            printf("Error: failed to create thread!\n");
+            printf("Client: error: failed to create thread!\n");
     }
 
     sleep(10);
@@ -73,5 +73,7 @@ int main(){
         pthread_join ( tid[i], NULL);
     }
     
+    printf("Client: terminating...\n");
+
     return 0;
 }
